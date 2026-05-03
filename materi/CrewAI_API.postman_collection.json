@@ -8,12 +8,27 @@
 	"item": [
 		{
 			"name": "Start Research",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"if (jsonData.task_id) {",
+							"    pm.collectionVariables.set(\"task_id\", jsonData.task_id);",
+							"    console.log(\"task_id saved: \" + jsonData.task_id);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"topic\": \"Ikan Sapu-sapu\"\n}",
+					"raw": "{\n    \"topic\": \"Artificial Intelligence in Manufacturing\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -36,6 +51,51 @@
 			"response": []
 		},
 		{
+			"name": "Start RAG (Upload Txt)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"if (jsonData.task_id) {",
+							"    pm.collectionVariables.set(\"task_id\", jsonData.task_id);",
+							"    console.log(\"task_id saved: \" + jsonData.task_id);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/rag",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"rag"
+					]
+				},
+				"description": "Upload file .txt untuk dianalisis oleh Crew RAG."
+			},
+			"response": []
+		},
+		{
 			"name": "Check Status",
 			"request": {
 				"method": "GET",
@@ -52,7 +112,7 @@
 						"{{task_id}}"
 					]
 				},
-				"description": "Cek status dan hasil dari task_id yang didapatkan."
+				"description": "Cek status dan hasil dari task_id yang didapatkan secara otomatis."
 			},
 			"response": []
 		}
@@ -60,7 +120,7 @@
 	"variable": [
 		{
 			"key": "task_id",
-			"value": "PASTE_YOUR_TASK_ID_HERE",
+			"value": "",
 			"type": "string"
 		}
 	]

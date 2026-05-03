@@ -1,0 +1,41 @@
+documen_analyzer_task:
+  description: >
+    Conduct a thorough extract of an existing {file}, and make sure you identify
+    every part from the report, particularly those related to sales figures.
+  expected_output: >
+    A list with 5 insight about the document
+  agent: doc_analyzer
+
+doc_resumer_task:
+  description: >
+    INPUT ANALYSIS:
+    The original report to be simplified is as follows:
+
+    SPECIFIC INSTRUCTIONS:
+    Your task is to analyze the above report and generate exactly
+    5 (FIVE) insight points that are:
+
+    1. **CLEAR**: Use everyday language that is easy to understand
+    2. **CONCISE**: Maximum 2 sentences per point
+    3. **IMPACTFUL**: Highlight the most important/interesting findings
+    4. **STRUCTURED**: Each point contains one main idea
+    5. **ACTIONABLE**: Provides clear direction or recommendations
+
+    EXPECTED OUTPUT FORMAT:
+    # 5 KEY INSIGHTS: [Brief Report Title]
+    ## Insight 1: [Insight Title]
+    [1-2 sentence clear and concise explanation]
+    ... (sampai Insight 5)
+
+    IMPORTANT RULES:
+    - DO NOT generate more than 5 points
+    - DO NOT use technical jargon without explanation
+    - DO NOT copy sentences directly from the original report
+    - MUST use proper English grammar
+    - MUST include a title for each insight
+
+  expected_output: >
+    5 structured insight points in the specified format, each with a title and 1-2 sentence explanation. Total output no more than 15 lines for explanations.
+  agent: doc_resumer
+  context:
+    - documen_analyzer_task

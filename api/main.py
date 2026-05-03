@@ -1,10 +1,16 @@
 from celery.result import AsyncResult
 from tasks.celery_app import celery_app
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from pydantic import BaseModel
 import tasks.celery_tasks as celeryTask
+import os
+import uuid
 
 app = FastAPI(title="CrewAI Celery API")
+
+# Folder to save uploaded files
+FILE_FOLDER = "output"
+os.makedirs(FILE_FOLDER, exist_ok=True)
 
 class ResearchInput(BaseModel):
     topic: str
@@ -32,3 +38,27 @@ async def get_status(task_id: str):
         response["error"] = str(task_result.info)
         
     return response
+
+@app.post("/rag")
+async def rag(file: UploadFile = File(...)):
+    # Validasi tipe file
+    if file.content_type != "text/plain":
+        raise HTTPException(status_code=400, detail="File must be a .txt file")
+
+    # Simpan file ke lokasi temporary
+    file_extension = os.path.splitext(file.filename)[1] or ".txt"
+    unique_filename = f"{uuid.uuid4().hex}{file_extension}"
+    file_path = os.path.join(FILE_FOLDER, unique_filename)
+
+    # Simpan konten file
+    content = await file.read()
+    with open(file_path, "wb") as f:
+        f.write(content)
+
+    # Kirim ke Celery task secara background
+    task = celeryTask.doc_analyzer.delay(file_path)
+    
+    return {
+        "task_id": task.id, 
+        "file_path": file_path
+    }
