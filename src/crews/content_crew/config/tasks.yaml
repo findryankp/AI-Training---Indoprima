@@ -1,0 +1,21 @@
+planning_task:
+  description: >
+    Create a detailed outline for a blog post about {topic}.
+  expected_output: >
+    A structured blog post outline with title and section breakdowns.
+  agent: planner
+
+writing_task:
+  description: >
+    Using the outline provided, write a full blog post about {topic}.
+  expected_output: >
+    A complete blog post in markdown format.
+  agent: writer
+
+editing_task:
+  description: >
+    Review and edit the blog post about {topic}.
+  expected_output: >
+    The final, polished blog post in markdown format.
+  agent: editor
+  output_file: output/post.md
